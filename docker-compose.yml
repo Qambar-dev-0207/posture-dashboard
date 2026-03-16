@@ -1,0 +1,69 @@
+version: '3.8'
+
+services:
+  # Python Ingestion Server
+  ingestion-server:
+    build:
+      context: ./backend/ingestion-server
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      MONGODB_URI: ${MONGODB_URI}
+      ESP32_API_URL: ${ESP32_API_URL}
+      PATIENT_ID: ${PATIENT_ID}
+      POLL_INTERVAL: ${POLL_INTERVAL:-5}
+    depends_on:
+      - api-server
+    networks:
+      - posture-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Node.js API Server
+  api-server:
+    build:
+      context: ./backend/api-server
+      dockerfile: Dockerfile
+    ports:
+      - "5000:5000"
+    environment:
+      MONGODB_URI: ${MONGODB_URI}
+      PORT: 5000
+      NODE_ENV: ${NODE_ENV:-production}
+      CORS_ORIGIN: ${CORS_ORIGIN:-http://localhost:5173}
+    networks:
+      - posture-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # React Dashboard (optional - can be served by nginx separately)
+  dashboard:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "80:3000"
+    environment:
+      VITE_API_URL: http://api-server:5000
+    depends_on:
+      - api-server
+    networks:
+      - posture-network
+    restart: unless-stopped
+
+networks:
+  posture-network:
+    driver: bridge
+
+volumes:
+  mongodb-data:
+    driver: local

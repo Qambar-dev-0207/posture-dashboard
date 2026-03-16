@@ -1,0 +1,70 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-background text-zinc-100 font-sans antialiased selection:bg-primary-500/30 selection:text-primary-400;
+    background-image: 
+      radial-gradient(circle at 10% 20%, rgba(16, 185, 129, 0.05), transparent 25%), 
+      radial-gradient(circle at 90% 80%, rgba(99, 102, 241, 0.05), transparent 25%);
+    background-attachment: fixed;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply tracking-tight font-semibold text-zinc-50;
+  }
+}
+
+@layer components {
+  /* Modern Glass Card */
+  .glass-card {
+    @apply bg-zinc-900/40 backdrop-blur-2xl border border-white/5 rounded-2xl shadow-glass transition-all duration-500;
+  }
+  
+  .glass-card-hover {
+    @apply hover:bg-zinc-900/60 hover:border-primary-500/20 hover:shadow-emerald-glow hover:-translate-y-1;
+  }
+
+  /* Buttons */
+  .btn-cyber {
+    @apply relative overflow-hidden px-6 py-2.5 rounded-xl font-semibold text-white transition-all duration-300
+           bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 hover:to-emerald-400
+           shadow-lg shadow-emerald-500/20 hover:shadow-emerald-500/40 active:scale-95;
+  }
+
+  .btn-cyber-outline {
+    @apply px-6 py-2.5 rounded-xl font-semibold transition-all duration-300 border border-zinc-800 
+           text-zinc-400 hover:text-white hover:border-emerald-500/50 hover:bg-emerald-500/5;
+  }
+
+  /* Form Elements */
+  .input-cyber {
+    @apply bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-2.5 text-zinc-200 
+           focus:outline-none focus:border-primary-500/50 focus:ring-4 focus:ring-primary-500/10 
+           transition-all duration-300 placeholder:text-zinc-600;
+  }
+
+  /* Custom Scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-background;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-slate-700 rounded-full hover:bg-slate-600 transition-colors;
+  }
+}
+
+/* Utilities */
+.text-gradient {
+  @apply bg-clip-text text-transparent bg-gradient-to-r from-primary-400 to-secondary-400;
+}
+
+.text-gradient-gold {
+  @apply bg-clip-text text-transparent bg-gradient-to-r from-amber-300 to-orange-400;
+}

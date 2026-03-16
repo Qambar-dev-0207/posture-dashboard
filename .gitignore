@@ -1,0 +1,47 @@
+# Environment
+.env
+.env.local
+.env.*.local
+.venv
+venv/
+env/
+ENV/
+
+# Node
+node_modules/
+npm-debug.log
+yarn-error.log
+dist/
+build/
+.next/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+pip-log.txt
+pip-delete-this-directory.txt
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*.swn
+*.sublime-*
+
+# OS
+.DS_Store
+Thumbs.db
+*.log
+
+# Database
+.mongo-cache
+*.db
+
+# Build outputs
+dist/
+build/
+out/
