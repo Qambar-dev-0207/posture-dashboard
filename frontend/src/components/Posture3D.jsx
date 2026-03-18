@@ -1,10 +1,13 @@
 import React, { useRef, useEffect, useState } from 'react';
 import * as THREE from 'three';
 
-export default function Posture3D({ deviations = {} }) {
+export default function Posture3D({ deviations }) {
   const containerRef = useRef(null);
   const sceneRef = useRef(null);
   const [loadingComplete, setLoadingComplete] = useState(false);
+  
+  // Safe reference for data
+  const data = deviations || {};
 
   useEffect(() => {
     if (!containerRef.current) return;
@@ -90,7 +93,7 @@ export default function Posture3D({ deviations = {} }) {
       );
       head.position.y = 1.55;
       head.position.z = -0.05;
-      head.rotation.z = THREE.MathUtils.degToRad(deviations.neck || 0);
+      head.rotation.z = THREE.MathUtils.degToRad(data.neck || 0);
       head.castShadow = true;
       head.receiveShadow = true;
       group.add(head);
@@ -98,7 +101,7 @@ export default function Posture3D({ deviations = {} }) {
       // Neck
       createBone(0.08, 0.25, 0.08, 0xcbd5e1, 
         new THREE.Vector3(0, 1.32, -0.02),
-        { z: deviations.neck || 0 }
+        { z: data.neck || 0 }
       );
 
       // Upper spine (back) - Blue indicators
@@ -107,7 +110,7 @@ export default function Posture3D({ deviations = {} }) {
         new THREE.MeshPhongMaterial({ color: 0x0ea5e9, emissive: 0x0ea5e9, emissiveIntensity: 0.2 })
       );
       spine.position.set(0, 1.05, 0);
-      spine.rotation.z = THREE.MathUtils.degToRad((deviations.back || 0) * 0.5);
+      spine.rotation.z = THREE.MathUtils.degToRad((data.back || 0) * 0.5);
       spine.castShadow = true;
       spine.receiveShadow = true;
       group.add(spine);
@@ -118,7 +121,7 @@ export default function Posture3D({ deviations = {} }) {
         new THREE.MeshPhongMaterial({ color: 0x8b5cf6, emissive: 0x8b5cf6, emissiveIntensity: 0.2 })
       );
       waist.position.set(0, 0.55, 0.05);
-      waist.rotation.z = THREE.MathUtils.degToRad((deviations.waist || 0) * 0.3);
+      waist.rotation.z = THREE.MathUtils.degToRad((data.waist || 0) * 0.3);
       waist.castShadow = true;
       waist.receiveShadow = true;
       group.add(waist);
@@ -139,13 +142,13 @@ export default function Posture3D({ deviations = {} }) {
 
       const leftShoulder = new THREE.Mesh(shoulderGeo, shoulderMat);
       leftShoulder.position.set(-0.25, 1.25, 0);
-      leftShoulder.rotation.z = THREE.MathUtils.degToRad(deviations.left_shoulder || 0);
+      leftShoulder.rotation.z = THREE.MathUtils.degToRad(data.left_shoulder || 0);
       leftShoulder.castShadow = true;
       group.add(leftShoulder);
 
       const rightShoulder = new THREE.Mesh(shoulderGeo, shoulderMat);
       rightShoulder.position.set(0.25, 1.25, 0);
-      rightShoulder.rotation.z = THREE.MathUtils.degToRad(-(deviations.right_shoulder || 0));
+      rightShoulder.rotation.z = THREE.MathUtils.degToRad(-(data.right_shoulder || 0));
       rightShoulder.castShadow = true;
       group.add(rightShoulder);
 
@@ -247,19 +250,19 @@ export default function Posture3D({ deviations = {} }) {
         <div className="grid grid-cols-2 gap-3 text-xs font-mono">
           <div className="flex items-center gap-2">
             <div className="w-2 h-2 rounded-full bg-primary-500 shadow-[0_0_8px_#0ea5e9]" />
-            <span className="text-slate-400">Back: <span className="text-white">{(deviations.back || 0).toFixed(1)}°</span></span>
+            <span className="text-slate-400">Back: <span className="text-white">{(data.back || 0).toFixed(1)}°</span></span>
           </div>
           <div className="flex items-center gap-2">
             <div className="w-2 h-2 rounded-full bg-secondary-500 shadow-[0_0_8px_#6366f1]" />
-            <span className="text-slate-400">Waist: <span className="text-white">{(deviations.waist || 0).toFixed(1)}°</span></span>
+            <span className="text-slate-400">Waist: <span className="text-white">{(data.waist || 0).toFixed(1)}°</span></span>
           </div>
           <div className="flex items-center gap-2">
             <div className="w-2 h-2 rounded-full bg-success shadow-[0_0_8px_#10b981]" />
-            <span className="text-slate-400">Shoulders: <span className="text-white">{((deviations.left_shoulder || 0 + deviations.right_shoulder || 0) / 2).toFixed(1)}°</span></span>
+            <span className="text-slate-400">Shoulders: <span className="text-white">{((data.left_shoulder || 0 + data.right_shoulder || 0) / 2).toFixed(1)}°</span></span>
           </div>
           <div className="flex items-center gap-2">
             <div className="w-2 h-2 rounded-full bg-slate-200" />
-            <span className="text-slate-400">Neck: <span className="text-white">{(deviations.neck || 0).toFixed(1)}°</span></span>
+            <span className="text-slate-400">Neck: <span className="text-white">{(data.neck || 0).toFixed(1)}°</span></span>
           </div>
         </div>
       </div>
