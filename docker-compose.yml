@@ -45,21 +45,6 @@ services:
       timeout: 10s
       retries: 3
 
-  # React Dashboard (optional - can be served by nginx separately)
-  dashboard:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
-    ports:
-      - "80:3000"
-    environment:
-      VITE_API_URL: http://api-server:5000
-    depends_on:
-      - api-server
-    networks:
-      - posture-network
-    restart: unless-stopped
-
 networks:
   posture-network:
     driver: bridge

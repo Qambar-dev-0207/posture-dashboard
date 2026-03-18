@@ -1,0 +1,37 @@
+# Combined Dockerfile for Posture Platform Backend
+# Includes: Node.js (API Server) and Python (Ingestion Server)
+
+FROM python:3.10-slim
+
+# Install Node.js
+RUN apt-get update && apt-get install -y curl gnupg && \
+    curl -fsSL https://deb.nodesource.com/setup_18.x | bash - && \
+    apt-get install -y nodejs && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+
+# 1. Setup API Server (Node.js)
+COPY api-server/package*.json ./api-server/
+RUN cd api-server && npm install --production
+
+# 2. Setup Ingestion Server (Python)
+COPY ingestion-server/requirements.txt ./ingestion-server/
+RUN pip install --no-cache-dir -r ingestion-server/requirements.txt
+
+# 3. Copy source code
+COPY api-server ./api-server/
+COPY ingestion-server ./ingestion-server/
+
+# 4. Copy and prepare the start script
+COPY start_backend.sh /app/start_backend.sh
+RUN chmod +x /app/start_backend.sh
+
+# Expose ports for both services
+# API Server
+EXPOSE 5000
+# Ingestion Server
+EXPOSE 8000
+
+# Run the combined backend
+CMD ["/app/start_backend.sh"]
