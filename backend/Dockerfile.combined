@@ -12,19 +12,19 @@ RUN apt-get update && apt-get install -y curl gnupg && \
 WORKDIR /app
 
 # 1. Setup API Server (Node.js)
-COPY api-server/package*.json ./api-server/
+COPY backend/api-server/package*.json ./api-server/
 RUN cd api-server && npm install --production
 
 # 2. Setup Ingestion Server (Python)
-COPY ingestion-server/requirements.txt ./ingestion-server/
+COPY backend/ingestion-server/requirements.txt ./ingestion-server/
 RUN pip install --no-cache-dir -r ingestion-server/requirements.txt
 
 # 3. Copy source code
-COPY api-server ./api-server/
-COPY ingestion-server ./ingestion-server/
+COPY backend/api-server ./api-server/
+COPY backend/ingestion-server ./ingestion-server/
 
 # 4. Copy and prepare the start script
-COPY start_backend.sh /app/start_backend.sh
+COPY backend/start_backend.sh /app/start_backend.sh
 RUN chmod +x /app/start_backend.sh
 
 # Expose ports for both services
